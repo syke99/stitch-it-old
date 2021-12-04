@@ -1,17 +1,13 @@
 package main
 
 import (
-	"fmt"
-	"image"
-	"log"
-	"os"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	dmc "github.com/syke99/go-c2dmc"
 )
 
 func main() {
+
+	logger := NewLogger()
 
 	// create new fiber instance  and use across whole app
 	app := fiber.New()
@@ -28,86 +24,14 @@ func main() {
 
 	// handle image processing using put request and provinding
 	// image name
-	app.Put("/:imageName", handleImageProcessing)
+	app.Put("/:imageName+", handleImageProcessing)
 
 	// delete uploaded image by providing unique image name
 	app.Delete("/:imageName", handleDeleteImage)
-}
 
-func handleFileupload(c *fiber.Ctx) error {
-
-	file, err := c.FormFile("image")
-
+	err := app.Listen(":4000")
 	if err != nil {
-		log.Println("image upload error --> ", err)
-		return c.JSON(fiber.Map{"status": 500, "message": "Server error", "data": nil})
-
+		logger.log.Fatal().Err(err)
 	}
 
-	err = c.SaveFile(file, fmt.Sprintf("./images/%s", file.Filename))
-
-	if err != nil {
-		log.Println("image save error --> ", err)
-		return c.JSON(fiber.Map{"status": 500, "message": "Server error", "data": nil})
-	}
-
-	return c.JSON(fiber.Map{"status": 201, "message": "Image uploaded successfully"})
-}
-
-func handleImageProcessing(c *fiber.Ctx) error {
-
-	logger := NewLogger()
-
-	imageName := c.Params("imageName")
-
-	f, err := os.Open(fmt.Sprintf("./images/%s", imageName))
-	if err != nil {
-		logger.log.Err(err)
-	}
-
-	defer f.Close()
-
-	img, _, err := image.Decode(f)
-	if err != nil {
-		logger.log.Err(err)
-	}
-
-	bounds := img.Bounds()
-	w, h := bounds.Max.X, bounds.Max.Y
-
-	var dmcs [][]string
-
-	for y := 0; y < h; y++ {
-		var row []string
-		for x := 0; x < w; x++ {
-			col := img.At(x, y)
-
-			cb := dmc.NewColorBank()
-
-			r, g, b := cb.RgbA(col)
-
-			d, _ := cb.RgbToDmc(r, g, b)
-
-			row = append(row, d)
-			x++
-		}
-		dmcs = append(dmcs, row)
-		y++
-	}
-
-	return nil
-}
-
-func handleDeleteImage(c *fiber.Ctx) error {
-	// extract image name from params
-	imageName := c.Params("imageName")
-
-	// delete image from ./images
-	err := os.Remove(fmt.Sprintf("./images/%s", imageName))
-	if err != nil {
-		log.Println(err)
-		return c.JSON(fiber.Map{"status": 500, "message": "Server Error", "data": nil})
-	}
-
-	return c.JSON(fiber.Map{"status": 201, "message": "Image deleted successfully", "data": nil})
 }
