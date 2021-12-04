@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"image"
 	"log"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	dmc "github.com/syke99/go-c2dmc"
 )
 
 func main() {
@@ -65,23 +67,33 @@ func handleImageProcessing(c *fiber.Ctx) error {
 
 	defer f.Close()
 
-	// img, _, err := image.Decode(f)
-	// if err != nil {
-	// 	logger.log.Err(err)
-	// }
+	img, _, err := image.Decode(f)
+	if err != nil {
+		logger.log.Err(err)
+	}
 
-	// bounds := img.Bounds()
-	// w, h := bounds.Max.X, bounds.Max.Y
+	bounds := img.Bounds()
+	w, h := bounds.Max.X, bounds.Max.Y
 
-	// var dmcs [][]string
+	var dmcs [][]string
 
-	// for y := 0; y < h; y++ {
-	// 	var row []string
-	// 	for x := 0; x < w; x++ {
-	// 		col = img.At(x, y)
+	for y := 0; y < h; y++ {
+		var row []string
+		for x := 0; x < w; x++ {
+			col := img.At(x, y)
 
-	// 	}
-	// }
+			cb := dmc.NewColorBank()
+
+			r, g, b := cb.RgbA(col)
+
+			d, _ := cb.RgbToDmc(r, g, b)
+
+			row = append(row, d)
+			x++
+		}
+		dmcs = append(dmcs, row)
+		y++
+	}
 
 	return nil
 }
