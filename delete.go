@@ -1,23 +1,23 @@
 package main
 
-// import (
-// 	"fmt"
-// 	"log"
-// 	"os"
+import (
+	"os"
+	"strings"
 
-// 	"github.com/gofiber/fiber/v2"
-// )
+	"github.com/gofiber/fiber/v2"
+)
 
-// func handleDeleteImage(c *fiber.Ctx) error {
-// 	// extract image name from params
-// 	imageName := c.Params("imageName")
+func handleDeleteImage(c *fiber.Ctx, f string) error {
 
-// 	// delete image from ./images
-// 	err := os.Remove(fmt.Sprintf("./images/%s", imageName))
-// 	if err != nil {
-// 		log.Println(err)
-// 		return c.JSON(fiber.Map{"status": 500, "message": "Server Error", "data": nil})
-// 	}
+	patNm := strings.Split(f, ".")[0]
 
-// 	return c.JSON(fiber.Map{"status": 201, "message": "Image deleted successfully", "data": nil})
-// }
+	if err := os.Remove("./public/images/" + f); err != nil {
+		return c.JSON(fiber.Map{"status": 500, "message": "Server error", "data": err})
+	}
+
+	if err := os.Remove("./public/patterns/" + patNm + ".xlsx"); err != nil {
+		return c.JSON(fiber.Map{"status": 500, "message": "Server error", "data": err})
+	}
+
+	return c.JSON(fiber.Map{"status": 201, "message": "Image deleted successfully", "data": nil})
+}

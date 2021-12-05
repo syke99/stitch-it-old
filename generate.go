@@ -2,14 +2,13 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 
 	"github.com/xuri/excelize/v2"
 )
 
-func generateExcelPattern(patternNm string, colArr [][]string, colNum map[string]int) {
+func generateExcelPattern(patternNm string, colArr [][]string, colNum map[string]int) string {
 	f := excelize.NewFile()
 
 	f.SetCellValue("Sheet1", "A1", "Thread Colors for this Pattern")
@@ -93,6 +92,10 @@ func generateExcelPattern(patternNm string, colArr [][]string, colNum map[string
 	fileName := patternNm + ".xlsx"
 
 	if err := f.SaveAs(fileName); err != nil {
-		log.Fatal(err)
+		genErr := "failed to generate and save excel pattern"
+
+		return genErr
 	}
+
+	return ""
 }

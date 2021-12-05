@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -20,6 +21,7 @@ func main() {
 	// serve  react app from stitch-it/stitch-it directory
 	app.Static("/stitch-it", "./stitch-it")
 
+	// serve index.html at root path
 	app.Get("/", func(c *fiber.Ctx) error {
 		if err := c.SendFile("./stitch-it/public/index.html"); err != nil {
 			return c.JSON(fiber.Map{"status": 500, "message": "Server error", "data": err})
@@ -35,13 +37,17 @@ func main() {
 	app.Put("/images/:image", handleImageProcessing)
 
 	// handle excel download using get request
-	app.Get("/patterns/:imageName", func(c *fiber.Ctx) error {
+	app.Get("/patterns/:image", func(c *fiber.Ctx) error {
 
-		patNm := c.Params("imageName")
+		f := c.Params("image")
+
+		patNm := strings.Split(f, ".")[0]
 
 		if err := c.SendFile("./public/patterns/" + patNm + ".xlsx"); err != nil {
 			return c.JSON(fiber.Map{"status": 500, "message": "Server error", "data": err})
 		}
+
+		handleDeleteImage(c, f)
 
 		return nil
 	})
