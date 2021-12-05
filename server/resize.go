@@ -40,7 +40,7 @@ func resizeImage(img image.Image, size string) [][]string {
 	for y := 0; y < h; y++ {
 		var row []string
 		for x := 0; x < w; x++ {
-			col := img.At(x, y)
+			col := resImg.At(x, y)
 
 			cb := dmc.NewColorBank()
 
