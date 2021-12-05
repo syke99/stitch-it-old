@@ -17,7 +17,7 @@ func resizeImage(img image.Image, size string) ([][]string, map[string]int) {
 	ih, _ := strconv.Atoi(sizes[1])
 
 	g := gift.New(
-		gift.Resize(iw, ih, gift.LanczosResampling),
+		gift.Resize(iw*10, ih*10, gift.LanczosResampling),
 	)
 
 	res := image.NewRGBA(g.Bounds(img.Bounds()))

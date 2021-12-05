@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/xuri/excelize/v2"
 )
@@ -10,39 +12,82 @@ import (
 func generateExcelPattern(patternNm string, colArr [][]string, colNum map[string]int) {
 	f := excelize.NewFile()
 
-	for num, _ := range colArr {
-		if num == 0 {
+	f.SetCellValue("Sheet1", "A1", "Thread Colors for this Pattern")
+	f.MergeCell("Sheet1", "A1", "B2")
 
-			f.SetCellValue("Sheet1", "A1", "Thread Colors for this Pattern")
-			f.MergeCell("Sheet1", "A1", "B2")
+	style, _ := f.NewStyle(`{"alighnment":{"horizontal":"center","vertical":"center"},"font":{"bold":true,"italic":false}}`)
 
-			style, _ := f.NewStyle(`{"alighnment":{"horizontal":"center","vertical":"center"},"font":{"bold":true,"italic":false}}`)
+	f.SetCellStyle("Sheet1", "A1", "B2", style)
 
-			f.SetCellStyle("Sheet1", "A1", "B2", style)
+	for key, element := range colNum {
 
-			for key, element := range colNum {
+		var rowIndx int = 3
 
-				var rowIndx int = 3
+		rowStr := strconv.Itoa(rowIndx)
 
-				var rowStr = strconv.Itoa(rowIndx)
+		var col1 = "A" + rowStr
+		var col2 = "B" + rowStr
 
-				var col1 = "A" + rowStr
-				var col2 = "B" + rowStr
+		threadNum := strconv.Itoa(element)
 
-				var threadNum = strconv.Itoa(element)
+		f.SetCellValue("Sheet1", col1, threadNum)
+		f.SetCellStyle("Sheet1", col1, col1, style)
 
-				f.SetCellValue("Sheet1", col1, threadNum)
-				f.SetCellStyle("Sheet1", col1, col1, style)
+		f.SetCellValue("Sheet1", col2, key)
+		f.SetCellStyle("Sheet1", col2, col2, style)
 
-				f.SetCellValue("Sheet1", col2, key)
-				f.SetCellStyle("Sheet1", col2, col2, style)
+		rowIndx++
+	}
 
-				rowIndx++
+	indx := f.NewSheet("Sheet2")
+
+	f.SetActiveSheet(indx)
+
+	var row int = 1
+
+	rowStr := strconv.Itoa(row)
+
+	alph := [26]string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+		"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
+
+	for _, i := range colArr {
+
+		for _, j := range i {
+
+			alphCntr := 0
+
+			alc := 1
+
+			if alphCntr != 25 {
+
+				col := (strings.Repeat(alph[alphCntr], alc)) + rowStr
+
+				style := []string{col, col, "2", "2"}
+
+				s, _ := f.NewStyle(fmt.Sprintf(`{"border":[{"type":"left","color":"#000000","style":%s},{"type":"top","color":"#000000","style":%s},{"type":"bottom","color":"#000000","style":%s},{"type":"right","color":"#000000","style":%s}]}`, style[2], style[3], style[4], style[5]))
+
+				f.SetCellValue("Sheet2", col, colNum[j])
+				f.SetCellStyle("Sheet2", col, col, s)
+
+				alphCntr++
+
+			} else {
+				alphCntr = 0
+				alc++
+
+				col := (strings.Repeat(alph[alphCntr], alc)) + rowStr
+
+				style := []string{col, col, "2", "2"}
+
+				s, _ := f.NewStyle(style)
+
+				f.SetCellValue("Sheet2", col, colNum[j])
+				f.SetCellStyle("Sheet2", col, col, s)
+
+				alphCntr++
 			}
 		}
-		// for _, j := range i {
-
-		// }
+		row++
 	}
 
 	fileName := patternNm + ".xlsx"
