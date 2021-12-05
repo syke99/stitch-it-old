@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"image"
-	"io/ioutil"
+	"io"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -19,14 +19,22 @@ func handleFileupload(c *fiber.Ctx) error {
 
 	}
 
-	b, err := ioutil.ReadFile(file.Filename)
-
+	f, err := file.Open()
 	if err != nil {
 		log.Println("image could not be read for processing")
-		return c.JSON(fiber.Map{"status": 400, "message": "Image could not be read for proessing, bad request"})
+		return c.JSON(fiber.Map{"status": 500, "message": "Image could not be read for proessing, bad request"})
 	}
 
-	img, _, _ := image.Decode(bytes.NewReader(b))
+	defer f.Close()
+
+	buf := bytes.NewBuffer(nil)
+
+	if _, err := io.Copy(buf, f); err != nil {
+		log.Println("image could not be read for processing")
+		return c.JSON(fiber.Map{"status": 500, "message": "Image could not be read for proessing, bad request"})
+	}
+
+	img, _, _ := image.Decode(bytes.NewReader(buf.Bytes()))
 
 	resize := c.FormValue("resize")
 
