@@ -47,10 +47,15 @@ func handleImageProcessing(c *fiber.Ctx) error {
 	// check to make sure colArr isn't empty
 	// and then create excel pattern and delete
 	// image file
+
+	var genErr error
+
 	if (len(colArr) != 0) && (colNum != nil) {
-		return nil
+		generateExcelPattern(imgNm, colArr, colNum)
 	} else {
-		return c.JSON(fiber.Map{"status": 201, "message": "Image successfully processed", "data": img})
+		genErr = c.JSON(fiber.Map{"status": 201, "message": "Image successfully processed", "data": img})
 	}
+
+	return genErr
 
 }

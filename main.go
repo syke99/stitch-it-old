@@ -17,8 +17,7 @@ func main() {
 	// middleware to allow all clients to communicate using http and allow cors
 	app.Use(cors.New())
 
-	// serve  images from images directory prefixed with /images
-	// i.e http://localhost:4000/images/someimage.webp
+	// serve  react app from stitch-it/stitch-it directory
 	app.Static("/stitch-it", "./stitch-it")
 
 	app.Get("/", func(c *fiber.Ctx) error {
