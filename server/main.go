@@ -22,13 +22,6 @@ func main() {
 	// handle image uploading using post request
 	app.Post("/", handleFileupload)
 
-	// handle image processing using put request and provinding
-	// image name
-	app.Put("/:imageName+", handleImageProcessing)
-
-	// delete uploaded image by providing unique image name
-	app.Delete("/:imageName", handleDeleteImage)
-
 	err := app.Listen(":4000")
 	if err != nil {
 		logger.log.Fatal().Err(err)
