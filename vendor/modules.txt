@@ -23,6 +23,9 @@ github.com/gofiber/fiber/v2/internal/schema
 github.com/gofiber/fiber/v2/internal/uuid
 github.com/gofiber/fiber/v2/middleware/cors
 github.com/gofiber/fiber/v2/utils
+# github.com/google/uuid v1.3.0
+## explicit
+github.com/google/uuid
 # github.com/klauspost/compress v1.13.4
 ## explicit; go 1.13
 github.com/klauspost/compress/flate

@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/disintegration/gift v1.2.1
 	github.com/gofiber/fiber/v2 v2.22.0
+	github.com/google/uuid v1.3.0
 	github.com/rs/zerolog v1.26.0
 	github.com/syke99/go-c2dmc v1.0.3
 )

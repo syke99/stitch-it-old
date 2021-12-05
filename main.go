@@ -33,7 +33,7 @@ func main() {
 	app.Post("/images", handleFileupload)
 
 	// handle image processing using put request
-	app.Put("/images/:imageName", handleImageProcessing)
+	app.Put("/images/:image", handleImageProcessing)
 
 	// handle excel download using get request
 	app.Get("/patterns/:imageName", func(c *fiber.Ctx) error {

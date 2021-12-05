@@ -20,7 +20,7 @@ func handleImageProcessing(c *fiber.Ctx) error {
 		size = c.FormValue("size")
 	}
 
-	imgNm := c.Params("imageName")
+	imgNm := c.Params("image")
 
 	file, err := os.Open(fmt.Sprintf("./public/images/%s", imgNm))
 
