@@ -7,7 +7,7 @@ import (
 	dmc "github.com/syke99/go-c2dmc"
 )
 
-func noResize(img image.Image) [][]string {
+func noResize(img image.Image) ([][]string, map[string]int) {
 
 	gi := gift.New(
 		gift.Pixelate(10),
@@ -22,8 +22,11 @@ func noResize(img image.Image) [][]string {
 
 	var dmcs [][]string
 
+	var colMap = make(map[string]int)
+
 	for y := 0; y < h; y++ {
 		var row []string
+		var tempMap = make(map[string]int)
 		for x := 0; x < w; x++ {
 			col := resImg.At(x, y)
 
@@ -33,12 +36,26 @@ func noResize(img image.Image) [][]string {
 
 			d, _ := cb.RgbToDmc(r, g, b)
 
+			if i, ok := tempMap[d]; ok {
+				i++
+				tempMap[d] = i
+			} else {
+				tempMap[d] = 0
+			}
+
 			row = append(row, d)
 			x++
 		}
+
+		if y == (h - 1) {
+			for col, num := range tempMap {
+				colMap[col] = num
+			}
+		}
+
 		dmcs = append(dmcs, row)
 		y++
 	}
 
-	return dmcs
+	return dmcs, colMap
 }
