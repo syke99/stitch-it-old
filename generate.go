@@ -78,7 +78,7 @@ func generateExcelPattern(patternNm string, colArr [][]string, colNum map[string
 
 				style := []string{col, col, "2", "2", "2", "2"}
 
-				s, _ := f.NewStyle(style)
+				s, _ := f.NewStyle(fmt.Sprintf(`{"border":[{"type":"left","color":"#000000","style":%s},{"type":"top","color":"#000000","style":%s},{"type":"bottom","color":"#000000","style":%s},{"type":"right","color":"#000000","style":%s}]}`, style[2], style[3], style[4], style[5]))
 
 				f.SetCellValue("Sheet2", col, colNum[j])
 				f.SetCellStyle("Sheet2", col, col, s)
