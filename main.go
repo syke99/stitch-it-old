@@ -27,7 +27,7 @@ func main() {
 			return c.JSON(fiber.Map{"status": 500, "message": "Server error", "data": err})
 		}
 
-		return nil
+		return c.Next()
 	})
 
 	// handle image uploading using post request
