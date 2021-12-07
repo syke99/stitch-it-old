@@ -39,13 +39,13 @@ func resizeImage(img image.Image, size string) ([][]string, map[string]int) {
 
 	var colMap = make(map[string]int)
 
+	cb := dmc.NewColorBank()
+
 	for y := 0; y < h; y++ {
 		var row []string
 		var tempMap = make(map[string]int)
 		for x := 0; x < w; x++ {
 			col := resImg.At(x, y)
-
-			cb := dmc.NewColorBank()
 
 			r, g, b := cb.RgbA(col)
 
@@ -55,7 +55,7 @@ func resizeImage(img image.Image, size string) ([][]string, map[string]int) {
 				i++
 				tempMap[d] = i
 			} else {
-				tempMap[d] = 0
+				tempMap[d] = 1
 			}
 
 			row = append(row, d)
