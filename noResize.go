@@ -9,9 +9,9 @@ import (
 
 func noResize(img image.Image) ([][]string, map[string]int) {
 
-	iw := (img.Bounds().Max.X - 1) - (img.Bounds().Min.X)
+	iw := img.Bounds().Max.X
 
-	ih := (img.Bounds().Max.Y - 1) - (img.Bounds().Min.Y)
+	ih := img.Bounds().Max.Y
 
 	g := gift.New(
 		gift.Resize(iw*10, ih*10, gift.LanczosResampling),
