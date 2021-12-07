@@ -9,13 +9,25 @@ import (
 
 func noResize(img image.Image) ([][]string, map[string]int) {
 
+	iw := (img.Bounds().Max.X - 1) - (img.Bounds().Min.X)
+
+	ih := (img.Bounds().Max.Y - 1) - (img.Bounds().Min.Y)
+
 	g := gift.New(
+		gift.Resize(iw*10, ih*10, gift.LanczosResampling),
+	)
+
+	res := image.NewRGBA(g.Bounds(img.Bounds()))
+
+	g.Draw(res, img)
+
+	gi := gift.New(
 		gift.Pixelate(10),
 	)
 
-	resImg := image.NewRGBA(g.Bounds(img.Bounds()))
+	resImg := image.NewRGBA(gi.Bounds(img.Bounds()))
 
-	g.Draw(resImg, img)
+	gi.Draw(resImg, img)
 
 	bounds := img.Bounds()
 	w, h := bounds.Max.X, bounds.Max.Y
