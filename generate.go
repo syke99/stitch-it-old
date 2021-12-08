@@ -53,13 +53,13 @@ func generateExcelPattern(patternNm string, colArr [][]string, colNum map[string
 
 		for _, j := range i {
 
-			alphCntr := 0
+			alphI := 0
 
-			alc := 1
+			alphCntr := 1
 
 			if alphCntr != 25 {
 
-				col := (strings.Repeat(alph[alphCntr], alc)) + rowStr
+				col := (strings.Repeat(alph[alphI], alphCntr)) + rowStr
 
 				style := []string{col, col, "2", "2", "2", "2"}
 
@@ -71,10 +71,10 @@ func generateExcelPattern(patternNm string, colArr [][]string, colNum map[string
 				alphCntr++
 
 			} else {
-				alphCntr = 0
-				alc++
+				alphI = 0
+				alphCntr++
 
-				col := (strings.Repeat(alph[alphCntr], alc)) + rowStr
+				col := (strings.Repeat(alph[alphI], alphCntr)) + rowStr
 
 				style := []string{col, col, "2", "2", "2", "2"}
 
