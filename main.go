@@ -34,7 +34,7 @@ func main() {
 	app.Post("/images", handleFileupload)
 
 	// handle image processing using put request
-	app.Put("/images/:image", handleImageProcessing)
+	app.Put("/patterns/:image", handleImageProcessing)
 
 	// handle excel download using get request
 	app.Get("/patterns/:image", func(c *fiber.Ctx) error {
